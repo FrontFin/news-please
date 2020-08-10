@@ -55,6 +55,9 @@ class NewsPlease:
         :param url:
         :return:
         """
+        if(html is None):
+            return None
+
         extractor = article_extractor.Extractor(
             ['newspaper_extractor', 'readability_extractor', 'date_extractor', 'lang_detect_extractor'])
 
@@ -117,7 +120,7 @@ class NewsPlease:
             html = SimpleCrawler.fetch_url(url, timeout=timeout)
             results[url] = NewsPlease.from_html(html, url, download_date)
         else:
-            results = SimpleCrawler.fetch_urls(urls)
+            results = SimpleCrawler.fetch_urls(urls,timeout=timeout)
             for url in results:
                 results[url] = NewsPlease.from_html(results[url], url, download_date)
 
