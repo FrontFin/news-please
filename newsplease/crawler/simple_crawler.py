@@ -16,7 +16,10 @@ LOGGER = logging.getLogger(__name__)
 # customize headers
 HEADERS = {
     'Connection': 'close',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+    'Accept':'*/*',
+    #'User-Agent': 'Mozilla/5.0'
+    #'User-Agent':'PostmanRuntime/07b95a6b-5fdc-4d2d-91c1-56dae425b3bc'
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'
 }
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -46,9 +49,12 @@ class SimpleCrawler(object):
         html_str = None
         # send
         try:
+            headers = dict(HEADERS)
+            if "https://www.nasdaq.com/" in url:
+                headers['User-Agent']='PostmanRuntime/07b95a6b-5fdc-4d2d-91c1-56dae425b3bc'
             # read by streaming chunks (stream=True, iter_content=xx)
             # so we can stop downloading as soon as MAX_FILE_SIZE is reached
-            response = requests.get(url, timeout=timeout, verify=False, allow_redirects=True, headers=HEADERS)
+            response = requests.get(url, timeout=timeout, verify=False, allow_redirects=True, headers=headers)
         except (requests.exceptions.MissingSchema, requests.exceptions.InvalidURL):
             LOGGER.error('malformed URL: %s', url)
         except requests.exceptions.TooManyRedirects:
